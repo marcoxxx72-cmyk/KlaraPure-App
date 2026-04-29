@@ -5,7 +5,7 @@
     <title>Klara</title>
     <style>
         body {
-            background-color: #E0F7FA; /* Bleu très clair */
+            background-color: #E0F7FA;
             color: #2C4E64;
             font-family: Arial, sans-serif;
             margin: 0;
@@ -42,35 +42,82 @@
 
 <div class="container">
     <h1>Bonjour, je suis Klara</h1>
-    <p>Cliquez sur une langue pour m'entendre :</p>
+    <p>Cliquez sur une langue :</p>
 
-    <button onclick="playAudio('en')">🇬🇧 English</button>
-    <button onclick="playAudio('fr')">🇫🇷 Français</button>
-    <button onclick="playAudio('es')">🇪🇸 Español</button>
-    <button onclick="playAudio('it')">🇮🇹 Italiano</button>
+    <button onclick="speakKlara('en')">🇬🇧 English</button>
+    <button onclick="speakKlara('fr')">🇫🇷 Français</button>
+    <button onclick="speakKlara('es')">🇪🇸 Español</button>
+    <button onclick="speakKlara('it')">🇮🇹 Italiano</button>
 </div>
 
 <script>
-    function playAudio(lang) {
-        let audioFile;
-        
-        switch(lang) {
-            case 'fr':
-                audioFile = 'voice_fr.mp3'; /
-                break;
-            case 'es':
-                audioFile = 'voice_es.mp3'; 
-                break;
-            case 'it':
-                audioFile = 'voice_it.mp3'; 
-                break;
-            default:
-                audioFile = 'voice_en.mp3'; 
-        }
+// ==========================================
+// KLARA PURE © - VOICE SYSTEM
+// Voice Engine v7.0 — MP3 Edition
+// ==========================================
 
-        const audio = new Audio(audioFile);
-        audio.play();
+// --- FICHIERS AUDIO (CORRIGÉS) ---
+const audioFiles = {
+    en: "voice_en.mp3",
+    fr: "voice_fr.mp3",
+    es: "voice_es.mp3",
+    it: "voice_it.mp3"
+};
+
+let currentAudio = null;
+let isPlaying = false;
+
+// ==========================================
+// FUNCTION PRINCIPALE
+// ==========================================
+function speakKlara(langKey) {
+
+    // Stop si déjà en lecture
+    if (isPlaying) {
+        stopKlara();
+        return;
     }
+
+    let fileName = audioFiles[langKey];
+    
+    console.log("▶️  LECTURE : " + fileName);
+
+    // LANCER LE SON
+    try {
+        currentAudio = new Audio(fileName);
+        isPlaying = true;
+
+        currentAudio.onended = function () {
+            isPlaying = false;
+            currentAudio = null;
+            console.log("✅ Terminé");
+        };
+
+        currentAudio.onerror = function () {
+            console.error("❌ ERREUR: Fichier introuvable → " + fileName);
+            isPlaying = false;
+        };
+
+        currentAudio.play();
+
+    } catch (error) {
+        console.error("❌ Erreur: ", error);
+    }
+}
+
+// ==========================================
+// FUNCTION STOP
+// ==========================================
+function stopKlara() {
+    if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+        currentAudio = null;
+    }
+    isPlaying = false;
+    console.log("⏹️  Stop");
+}
+
 </script>
 
 </body>
