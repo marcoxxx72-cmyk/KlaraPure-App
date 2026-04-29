@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Klara</title>
+    <title>Klara Pure ©</title>
     <style>
         body {
             background-color: #E0F7FA;
@@ -41,8 +41,8 @@
 <body>
 
 <div class="container">
-    <h1>Bonjour, je suis Klara</h1>
-    <p>Cliquez sur une langue :</p>
+    <h1>Klara Pure ©</h1>
+    <p>Voice Engine v7.0</p>
 
     <button onclick="speakKlara('en')">🇬🇧 English</button>
     <button onclick="speakKlara('fr')">🇫🇷 Français</button>
@@ -56,33 +56,27 @@
 // Voice Engine v7.0 — MP3 Edition
 // ==========================================
 
-// --- FICHIERS AUDIO (CORRIGÉS) ---
+// --- FICHIERS AUDIO (NOMS CORRIGES) ---
 const audioFiles = {
-    en: "voice_en.mp3",
-    fr: "voice_fr.mp3",
-    es: "voice_es.mp3",
-    it: "voice_it.mp3"
+    en: "voice_en.mp3",  // <-- ICI C'EST BON
+    fr: "voice_fr.mp3",  // <-- ICI C'EST BON
+    es: "voice_es.mp3",  // <-- ICI C'EST BON
+    it: "voice_it.mp3"   // <-- ICI C'EST BON
 };
 
 let currentAudio = null;
 let isPlaying = false;
 
-// ==========================================
-// FUNCTION PRINCIPALE
-// ==========================================
 function speakKlara(langKey) {
 
-    // Stop si déjà en lecture
     if (isPlaying) {
         stopKlara();
         return;
     }
 
     let fileName = audioFiles[langKey];
-    
-    console.log("▶️  LECTURE : " + fileName);
+    console.log("▶️  Playing: " + fileName);
 
-    // LANCER LE SON
     try {
         currentAudio = new Audio(fileName);
         isPlaying = true;
@@ -94,7 +88,7 @@ function speakKlara(langKey) {
         };
 
         currentAudio.onerror = function () {
-            console.error("❌ ERREUR: Fichier introuvable → " + fileName);
+            console.error("❌ Fichier introuvable: " + fileName);
             isPlaying = false;
         };
 
@@ -105,9 +99,6 @@ function speakKlara(langKey) {
     }
 }
 
-// ==========================================
-// FUNCTION STOP
-// ==========================================
 function stopKlara() {
     if (currentAudio) {
         currentAudio.pause();
@@ -117,6 +108,12 @@ function stopKlara() {
     isPlaying = false;
     console.log("⏹️  Stop");
 }
+
+window.addEventListener('load', () => {
+    console.log("==================================");
+    console.log("   SYSTEME KLARA PRET ✅    ");
+    console.log("==================================");
+});
 
 </script>
 
