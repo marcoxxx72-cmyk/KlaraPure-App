@@ -208,7 +208,15 @@
             });
         });
     </script>
-
+<script>
+function talkToKlara() {
+    let msg = new SpeechSynthesisUtterance("Hello, I am Klara. How can I help you today?");
+    msg.lang = 'en-US';
+    msg.rate = 0.85;
+    msg.pitch = 1.1;
+    speechSynthesis.speak(msg);
+}
+</script>
 </body>
 </html>
 <button class="mic-button" id="micButton" onclick="talkToKlara()">
