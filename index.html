@@ -1,1 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klara - Votre douce compagnie</title>
+    
+    <!-- LE CSS AVEC LES BELLES COULEURS BLEU -->
+    <style>
+        /* Style Général */
+        body {
+            background-color: #E0F7FA; /* Fond bleu très clair */
+            color: #2C4E64;            /* Texte bleu foncé */
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            transition: all 0.5s ease;
+        }
 
+        /* Le Conteneur principal */
+        .container {
+            background-color: #F0F8FF; /* Fond blanc cassé */
+            padding: 40px;
+            border-radius: 25px; /* Coins très arrondis */
+            box-shadow: 0 8px 25px rgba(44, 78, 100, 0.1); /* Ombre douce */
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        /* Les Boutons */
+        button {
+            background-color: #8ECAE6; /* Bleu ciel */
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            margin: 10px;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #90E0EF; /* Plus clair au toucher */
+        }
+
+        h1 {
+            font-weight: 300;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- MUSIQUE DE FOND -->
+    <audio id="bgMusic" loop>
+        <source src="ambiance.mp3" type="audio/mpeg">
+    
+
+    <div class="container">
+        <h1>Bonjour, je suis Klara</h1>
+        
+        <p>Choisissez votre langue :</p>
+
+        <!-- BOUTONS DE LANGUES -->
+        <button onclick="playAudio('en')">🇬🇧 English</button>
+        <button onclick="playAudio('fr')">🇫🇷 Français</button>
+        <button onclick="playAudio('es')">🇪🇸 Español</button>
+        <button onclick="playAudio('it')">🇮🇹 Italiano</button>
+    </div>
+
+    <!-- LE JAVASCRIPT -->
+    <script>
+        // LANCER LA MUSIQUE TOUT DOUCEMENT
+        window.onload = function() {
+            var music = document.getElementById('bgMusic');
+            music.volume = 0.1; // Volume très bas pour l'ambiance
+            music.play();
+        }
+
+        // FONCTION POUR LIRE LES VOIX
+        function playAudio(lang) {
+            let audioFile;
+            
+            switch(lang) {
+                case 'fr':
+                    audioFile = 'voice_fr.mp3';
+                    break;
+                case 'es':
+                    audioFile = 'voice_es.mp3';
+                    break;
+                case 'it':
+                    audioFile = 'voice_it.mp3';
+                    break;
+                default:
+                    audioFile = 'voice_en.mp3';
+            }
+
+            // Créer l'objet audio et le jouer
+            const audio = new Audio(audioFile);
+            audio.play();
+        }
+    </script>
+
+</body>
+</html>
