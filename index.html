@@ -211,3 +211,27 @@
 
 </body>
 </html>
+<button class="mic-button" id="micButton" onclick="talkToKlara()">
+    🎙️ Speak to Klara
+</button>
+/* STYLE BOUTON MICRO */
+.mic-button {
+    background: linear-gradient(45deg, #333, #555);
+    color: #fff;
+    border: none;
+    padding: 15px 40px;
+    font-size: 1rem;
+    border-radius: 50px;
+    cursor: pointer;
+    margin-top: 20px;
+    margin-left: 20px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.mic-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    background: linear-gradient(45deg, #444, #666);
+}
