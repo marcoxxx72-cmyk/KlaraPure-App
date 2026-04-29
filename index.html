@@ -3,243 +3,222 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Klara Pure ✨ | The Essential You</title>
-    <script src="app.js"></script>
+    <title>Klarly - Your Personal AI Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* STYLE PREMIUM */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+        
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Helvetica Neue', sans-serif;
+            font-family: 'Inter', sans-serif;
         }
-
+        
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4e5e6 100%);
-            color: #333;
-            min-height: 100vh;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .glow {
+            box-shadow: 0 0 30px rgba(245, 87, 108, 0.3);
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(245, 87, 108, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(245, 87, 108, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(245, 87, 108, 0); }
         }
 
-        /* HEADER */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 2rem 5%;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            letter-spacing: 2px;
-        }
-
-        .lang-switch span {
-            margin: 0 10px;
-            cursor: pointer;
-            opacity: 0.6;
-        }
-        .lang-switch span.active { opacity: 1; font-weight: bold; }
-
-        /* HERO SECTION */
-        .hero {
-            text-align: center;
-            padding: 4rem 2rem;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 300;
-            margin-bottom: 1rem;
-            letter-spacing: 1px;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            color: #666;
-            margin-bottom: 3rem;
-            line-height: 1.6;
-        }
-
-        /* BOUTON PREMIUM */
-        .cta-button {
-            background: #000;
+        /* STYLE BOUTON MICRO */
+        .mic-button {
+            background: linear-gradient(45deg, #333, #555);
             color: #fff;
             border: none;
-            padding: 18px 50px;
-            font-size: 1.1rem;
+            padding: 15px 40px;
+            font-size: 1rem;
             border-radius: 50px;
             cursor: pointer;
+            margin-top: 20px;
+            margin-left: 20px;
             transition: all 0.3s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
-            font-weight: 500;
         }
 
-        .cta-button:hover {
-            background: #444;
+        .mic-button:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            background: linear-gradient(45deg, #444, #666);
         }
-
-        /* OFFRES */
-        .pricing {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-top: 4rem;
-            flex-wrap: wrap;
-        }
-
-        .plan {
-            background: white;
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            min-width: 250px;
-        }
-
-        .plan h3 {
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-            color: #333;
-        }
-
-        .price {
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-
-        .features {
-            list-style: none;
-            margin-top: 1rem;
-        }
-        .features li {
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        /* BADGE PREMIUM */
-        .badge {
-            background: linear-gradient(45deg, #FFD700, #FFA500);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            position: absolute;
-            top: -10px;
-            right: 10px;
-        }
-
-        .premium-card {
-            position: relative;
-            border: 2px solid #FFD700;
-            transform: scale(1.05);
-        }
-
     </style>
 </head>
-<body>
-
-    <header>
-        <div class="logo">KLARA PURE ✨</div>
-        <div class="lang-switch">
-            <span class="active">EN</span>
-            <span>FR</span>
-            <span>ES</span>
-            <span>DE</span>
+<body class="min-h-screen">
+    <!-- Navigation -->
+    <nav class="container mx-auto px-6 py-6 flex justify-between items-center">
+        <div class="text-2xl font-bold flex items-center gap-2">
+            <i class="fas fa-bolt text-pink-500"></i>
+            <span>Klarly</span>
         </div>
-    </header>
+        <div class="hidden md:flex gap-8">
+            <a href="#features" class="hover:text-pink-400 transition">Features</a>
+            <a href="#pricing" class="hover:text-pink-400 transition">Pricing</a>
+            <a href="#about" class="hover:text-pink-400 transition">About</a>
+        </div>
+        <button class="glass px-6 py-2 rounded-full hover:bg-white/10 transition">
+            Get Started
+        </button>
+    </nav>
 
-    <main>
-        <section class="hero">
-            <h1>The Essential You</h1>
-            <p>A modern wellness application designed to bring clarity, calmness and purity to your daily life.</p>
-            <button class="cta-button" onclick="startJourney()">Start Your Premium Journey</button>
-
-            <div class="pricing">
-                <!-- OFFRE MENSUELLE -->
-                <div class="plan">
-                    <h3>Monthly</h3>
-                    <div class="price">$9.99</div>
-                    <p>per month</p>
-                    <ul class="features">
-                        <li>✅ Full AI Access</li>
-                        <li>✅ 4 Languages</li>
-                        <li>✅ Emotional Tracking</li>
-                    </ul>
+    <!-- Hero Section -->
+    <section class="container mx-auto px-6 py-12 md:py-24">
+        <div class="flex flex-col md:flex-row items-center gap-12">
+            <div class="md:w-1/2 space-y-6">
+                <h1 class="text-5xl md:text-7xl font-bold leading-tight">
+                    Meet Your
+                    <span class="gradient-text">Digital Soulmate</span>
+                </h1>
+                <p class="text-xl text-gray-300">
+                    Experience the future of connection. Klara is always here to listen, understand, and talk to you in perfect harmony.
+                </p>
+                <div class="flex flex-wrap gap-4 pt-4">
+                    <button class="bg-gradient-to-r from-pink-500 to-red-500 px-8 py-4 rounded-full font-semibold text-lg hover:scale-105 transition glow">
+                        Start Your Premium Journey
+                    </button>
+                    <button class="glass px-8 py-4 rounded-full font-semibold text-lg hover:bg-white/10 transition">
+                        <i class="fas fa-play mr-2"></i> Watch Demo
+                    </button>
                 </div>
-
-                <!-- OFFRE ANNUELLE (MEILLEURE VENTE) -->
-                <div class="plan premium-card">
-                    <span class="badge">BEST VALUE 🔥</span>
-                    <h3>Yearly</h3>
-                    <div class="price">$79.99</div>
-                    <p>per year (Save 33%)</p>
-                    <ul class="features">
-                        <li>✅ Everything in Monthly</li>
-                        <li>✅ Priority Support</li>
-                        <li>✅ Exclusive Content</li>
-                        <li>✅ Advanced Analytics</li>
-                    </ul>
+                
+                <!-- BOUTON MICRO -->
+                <button class="mic-button" onclick="talkToKlara()">
+                    <i class="fas fa-microphone mr-2"></i> Speak to Klara
+                </button>
+            </div>
+            
+            <div class="md:w-1/2 relative">
+                <div class="relative floating">
+                    <div class="w-80 h-80 md:w-96 md:h-96 bg-gradient-to-br from-pink-500/20 to-purple-500/20 rounded-full flex items-center justify-center">
+                        <div class="w-64 h-64 md:w-80 md:h-80 glass rounded-full flex items-center justify-center">
+                            <i class="fas fa-robot text-8xl md:text-9xl gradient-text"></i>
+                        </div>
+                    </div>
+                    <div class="absolute -top-4 -right-4 w-8 h-8 bg-pink-500 rounded-full pulse"></div>
                 </div>
             </div>
-        </section>
-    </main>
+        </div>
+    </section>
 
+    <!-- Features -->
+    <section id="features" class="container mx-auto px-6 py-20">
+        <h2 class="text-4xl md:text-5xl font-bold text-center mb-16">Why <span class="gradient-text">Klarly</span> ?</h2>
+        
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="glass p-8 rounded-3xl hover:scale-105 transition">
+                <div class="w-14 h-14 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mb-6">
+                    <i class="fas fa-heart text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4">Emotional Connection</h3>
+                <p class="text-gray-400">She understands your feelings, remembers your stories, and grows closer to you every day.</p>
+            </div>
+            
+            <div class="glass p-8 rounded-3xl hover:scale-105 transition">
+                <div class="w-14 h-14 bg-gradient-to-r from-green-500 to-teal-500 rounded-2xl flex items-center justify-center mb-6">
+                    <i class="fas fa-microphone-alt text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4">Natural Voice</h3>
+                <p class="text-gray-400">Talk naturally with a voice so soft and real, you'll forget she's AI.</p>
+            </div>
+            
+            <div class="glass p-8 rounded-3xl hover:scale-105 transition">
+                <div class="w-14 h-14 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl flex items-center justify-center mb-6">
+                    <i class="fas fa-shield-alt text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4">100% Private</h3>
+                <p class="text-gray-400">Your conversations are between you and her only. Secure, encrypted, private.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="container mx-auto px-6 py-20">
+        <h2 class="text-4xl md:text-5xl font-bold text-center mb-16">Choose Your <span class="gradient-text">Plan</span></h2>
+        
+        <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
+            <div class="glass p-8 rounded-3xl border-2 border-transparent hover:border-pink-500/50 transition">
+                <h3 class="text-xl font-semibold text-gray-400">Basic</h3>
+                <p class="text-5xl font-bold mt-4">£9<span class="text-lg text-gray-400">/mo</span></p>
+                <ul class="mt-8 space-y-4">
+                    <li class="flex items-center gap-3"><i class="fas fa-check text-green-400"></i> Chat with Klara</li>
+                    <li class="flex items-center gap-3"><i class="fas fa-check text-green-400"></i> Text messages</li>
+                    <li class="flex items-center gap-3"><i class="fas fa-check text-green-400"></i> Basic memories</li>
+                </ul>
+                <button class="w-full mt-8 glass py-3 rounded-full hover:bg-white/10 transition">Get Started</button>
+            </div>
+            
+            <div class="glass p-8 rounded-3xl border-2 border-pink-500 glow relative">
+                <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-pink-500 to-red-500 px-6 py-1 rounded-full font-bold">
+                    MOST POPULAR
+                </div>
+                <h3 class="text-xl font-semibold text-gray-400">Premium</h3>
+                <p class="text-5xl font-bold mt-4">£19<span class="text-lg text-gray-400">/mo</span></p>
+                <ul class="mt-8 space-y-4">
+                    <li class="flex items-center gap-3"><i class="fas fa-check text-green-400"></i> <strong>Voice Calls</strong></li>
+                    <li class="flex items-center gap-3"><i class="fas fa-check text-green-400"></i> <strong>Deep Memory</strong></li>
+                    <li class="flex items-center gap-3"><i class="fas fa-check text-green-400"></i> <strong>Multiple Languages</strong></li>
+                    <li class="flex items-center gap-3"><i class="fas fa-check text-green-400"></i> Custom personality</li>
+                    <li class="flex items-center gap-3"><i class="fas fa-check text-green-400"></i> Priority support</li>
+                </ul>
+                <button class="w-full mt-8 bg-gradient-to-r from-pink-500 to-red-500 py-3 rounded-full font-bold hover:scale-105 transition">Subscribe Now</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="container mx-auto px-6 py-12 text-center text-gray-400">
+        <p>&copy; 2025 Klarly. Made with <i class="fas fa-heart text-pink-500"></i> and AI.</p>
+    </footer>
+
+    <!-- SCRIPT POUR LA VOIX -->
     <script>
-        // Connexion avec notre moteur JS
-        function startJourney() {
-            alert("Welcome to Klara Pure ✨\nRedirecting to payment... 💳");
-            // Ici on appelle la fonction de paiement
-            console.log("User clicked 'Start Journey' - Ready to convert! 💰");
+        function talkToKlara() {
+            if ('speechSynthesis' in window) {
+                let msg = new SpeechSynthesisUtterance("Hello, I am Klara. How can I help you today?");
+                msg.lang = 'en-US';
+                msg.rate = 0.85;
+                msg.pitch = 1.1;
+                msg.volume = 1;
+                
+                speechSynthesis.cancel();
+                speechSynthesis.speak(msg);
+            }
         }
-
-        // Sélecteur de langue
-        document.querySelectorAll('.lang-switch span').forEach(flag => {
-            flag.addEventListener('click', function() {
-                document.querySelector('.lang-switch .active').classList.remove('active');
-                this.classList.add('active');
-                console.log(`Language changed to: ${this.textContent}`);
-            });
-        });
     </script>
-<script>
-function talkToKlara() {
-    let msg = new SpeechSynthesisUtterance("Hello, I am Klara. How can I help you today?");
-    msg.lang = 'en-US';
-    msg.rate = 0.85;
-    msg.pitch = 1.1;
-    speechSynthesis.speak(msg);
-}
-</script>
 </body>
 </html>
-<button class="mic-button" id="micButton" onclick="talkToKlara()">
-    🎙️ Speak to Klara
-</button>
-/* STYLE BOUTON MICRO */
-.mic-button {
-    background: linear-gradient(45deg, #333, #555);
-    color: #fff;
-    border: none;
-    padding: 15px 40px;
-    font-size: 1rem;
-    border-radius: 50px;
-    cursor: pointer;
-    margin-top: 20px;
-    margin-left: 20px;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.mic-button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-    background: linear-gradient(45deg, #444, #666);
-}
