@@ -1,1 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klara Pure ✨ | The Essential You</title>
+    <script src="app.js"></script>
+    <style>
+        /* STYLE PREMIUM */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', sans-serif;
+        }
 
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e5e6 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        /* HEADER */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 5%;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .lang-switch span {
+            margin: 0 10px;
+            cursor: pointer;
+            opacity: 0.6;
+        }
+        .lang-switch span.active { opacity: 1; font-weight: bold; }
+
+        /* HERO SECTION */
+        .hero {
+            text-align: center;
+            padding: 4rem 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 3rem;
+            line-height: 1.6;
+        }
+
+        /* BOUTON PREMIUM */
+        .cta-button {
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 18px 50px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+
+        .cta-button:hover {
+            background: #444;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        /* OFFRES */
+        .pricing {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 4rem;
+            flex-wrap: wrap;
+        }
+
+        .plan {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            min-width: 250px;
+        }
+
+        .plan h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .price {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .features {
+            list-style: none;
+            margin-top: 1rem;
+        }
+        .features li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        /* BADGE PREMIUM */
+        .badge {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            position: absolute;
+            top: -10px;
+            right: 10px;
+        }
+
+        .premium-card {
+            position: relative;
+            border: 2px solid #FFD700;
+            transform: scale(1.05);
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">KLARA PURE ✨</div>
+        <div class="lang-switch">
+            <span class="active">EN</span>
+            <span>FR</span>
+            <span>ES</span>
+            <span>DE</span>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>The Essential You</h1>
+            <p>A modern wellness application designed to bring clarity, calmness and purity to your daily life.</p>
+            <button class="cta-button" onclick="startJourney()">Start Your Premium Journey</button>
+
+            <div class="pricing">
+                <!-- OFFRE MENSUELLE -->
+                <div class="plan">
+                    <h3>Monthly</h3>
+                    <div class="price">$9.99</div>
+                    <p>per month</p>
+                    <ul class="features">
+                        <li>✅ Full AI Access</li>
+                        <li>✅ 4 Languages</li>
+                        <li>✅ Emotional Tracking</li>
+                    </ul>
+                </div>
+
+                <!-- OFFRE ANNUELLE (MEILLEURE VENTE) -->
+                <div class="plan premium-card">
+                    <span class="badge">BEST VALUE 🔥</span>
+                    <h3>Yearly</h3>
+                    <div class="price">$79.99</div>
+                    <p>per year (Save 33%)</p>
+                    <ul class="features">
+                        <li>✅ Everything in Monthly</li>
+                        <li>✅ Priority Support</li>
+                        <li>✅ Exclusive Content</li>
+                        <li>✅ Advanced Analytics</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Connexion avec notre moteur JS
+        function startJourney() {
+            alert("Welcome to Klara Pure ✨\nRedirecting to payment... 💳");
+            // Ici on appelle la fonction de paiement
+            console.log("User clicked 'Start Journey' - Ready to convert! 💰");
+        }
+
+        // Sélecteur de langue
+        document.querySelectorAll('.lang-switch span').forEach(flag => {
+            flag.addEventListener('click', function() {
+                document.querySelector('.lang-switch .active').classList.remove('active');
+                this.classList.add('active');
+                console.log(`Language changed to: ${this.textContent}`);
+            });
+        });
+    </script>
+
+</body>
+</html>
