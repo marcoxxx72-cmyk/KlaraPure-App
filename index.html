@@ -1,1 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Klara Pure ©</title>
+    <style>
+        body { background-color: #E0F7FA; color: #2C4E64; font-family: Arial, sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
+        .container { background-color: #F0F8FF; padding: 40px; border-radius: 25px; box-shadow: 0 8px 25px rgba(44, 78, 100, 0.1); text-align: center; }
+        button { background-color: #8ECAE6; color: white; border: none; padding: 15px 30px; margin: 10px; border-radius: 30px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #90E0EF; }
+    </style>
+</head>
+<body>
 
+<div class="container">
+    <h1>Klara Pure ©</h1>
+    <p>Voice Engine v7.0</p>
+
+    <button onclick="speakKlara('en')">🇬🇧 English</button>
+    <button onclick="speakKlara('fr')">🇫🇷 Français</button>
+    <button onclick="speakKlara('es')">🇪🇸 Español</button>
+    <button onclick="speakKlara('it')">🇮🇹 Italiano</button>
+</div>
+
+<script>
+// ==========================================
+// KLARA PURE © - VOICE SYSTEM
+// ==========================================
+
+// --- FICHIERS AUDIO (NOMS CORRECTS) ---
+const audioFiles = {
+    en: "voice_en.mp3",
+    fr: "voice_fr.mp3",
+    es: "voice_es.mp3",
+    it: "voice_it.mp3"
+};
+
+let currentAudio = null;
+let isPlaying = false;
+
+function speakKlara(langKey) {
+
+    if (isPlaying) {
+        if(currentAudio) currentAudio.pause();
+        isPlaying = false;
+        return;
+    }
+
+    let fileName = audioFiles[langKey];
+    console.log("▶️  Playing: " + fileName);
+
+    try {
+        currentAudio = new Audio(fileName);
+        isPlaying = true;
+
+        currentAudio.onended = function () {
+            isPlaying = false;
+            currentAudio = null;
+        };
+
+        currentAudio.onerror = function () {
+            console.error("❌ ERREUR: Fichier introuvable -> " + fileName);
+            isPlaying = false;
+        };
+
+        currentAudio.play();
+
+    } catch (error) {
+        console.error("❌ Erreur: ", error);
+    }
+}
+
+</script>
+
+</body>
+</html>
