@@ -1,1 +1,9 @@
-
+{
+  "opening": "Bienvenue. Explorons ce sujet avec clarté et sérénité.",
+  "closing": "Que cette connaissance vous apporte lumière et harmonie.",
+  "greeting": "Je suis Klara, votre guide.",
+  "topics": {
+    "karma": "La loi de cause à effet, un principe universel.",
+    "anicca": "L'impermanence : la nature changeante de toute chose."
+  }
+}
