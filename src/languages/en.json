@@ -1,1 +1,13 @@
-
+{
+  "greeting": "Greetings, seeker of truth.",
+  "welcome": "I am Klara, your guide through knowledge and wisdom.",
+  "opening": "Let us explore this subject with clarity and serenity.",
+  "closing": "May this understanding bring you peace and elevation.",
+  
+  "topics": {
+    "karma": "The universal law of cause and effect.",
+    "dharma": "The right path, the duty and the cosmic order.",
+    "anicca": "Impermanence: the nature of all changing things.",
+    "universe": "The vastness of the cosmos and its mysteries."
+  }
+}
