@@ -23,13 +23,45 @@
             background-repeat: no-repeat;
             background-position: center;
         }
+
+        /* --- LES BOUTONS DE LANGUES EN BAS --- */
+        .lang-buttons {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .lang-btn {
+            background-color: #8ECAE6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .lang-btn:hover { background-color: #90E0EF; }
+
     </style>
 </head>
 <body>
 
-    <div id="interface" onclick="speakKlara('fr')"></div>
+    <!-- L'IMAGE PRINCIPALE -->
+    <div id="interface"></div>
+
+    <!-- LES 4 BOUTONS -->
+    <div class="lang-buttons">
+        <button class="lang-btn" onclick="speakKlara('en')">🇬🇧 English</button>
+        <button class="lang-btn" onclick="speakKlara('fr')">🇫🇷 Français</button>
+        <button class="lang-btn" onclick="speakKlara('es')">🇪🇸 Español</button>
+        <button class="lang-btn" onclick="speakKlara('it')">🇮🇹 Italiano</button>
+    </div>
 
 <script>
+
+// ==========================================
+// KLARA PURE © - VOICE SYSTEM
+// ==========================================
 
 const mediaFiles = {
     en: { audio: "voice_en.mp3", image: "url(assets/page3.png)" },
@@ -42,6 +74,7 @@ const ui = document.getElementById('interface');
 let currentAudio = null;
 let isPlaying = false;
 
+// AFFICHE L'IMAGE DE DEMARRAGE
 window.onload = function() {
     ui.style.backgroundImage = "url(assets/page1.png)";
 };
