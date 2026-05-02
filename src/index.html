@@ -1,1 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Klara Pure ©</title>
+    <style>
+        body { 
+            background-color: #E0F7FA; 
+            margin: 0; 
+            padding: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            min-height: 100vh; 
+        }
+        
+        #interface {
+            width: 500px;
+            height: 500px;
+            cursor: pointer;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
 
+        /* --- LES BOUTONS DE LANGUES --- */
+        .lang-buttons {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .lang-btn {
+            background-color: #8ECAE6;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            margin: 8px;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .lang-btn:hover { background-color: #90E0EF; }
+
+    </style>
+</head>
+<body>
+
+    <div id="interface"></div>
+
+    <div class="lang-buttons">
+        <button class="lang-btn" onclick="speakKlara('en')">🇬🇧 English</button>
+        <button class="lang-btn" onclick="speakKlara('fr')">🇫🇷 Français</button>
+        <button class="lang-btn" onclick="speakKlara('es')">🇪🇸 Español</button>
+        <button class="lang-btn" onclick="speakKlara('it')">🇮🇹 Italiano</button>
+    </div>
+
+<script>
+
+// ==========================================
+// KLARA PURE © - VOICE SYSTEM
+// ==========================================
+
+// 🟢 CHEMINS CORRECTS :
+// Images dans assets/
+// Sons dans languages/
+const mediaFiles = {
+    en: { audio: "languages/voice_en.mp3", image: "url(assets/page3.png)" },
+    fr: { audio: "languages/voice_fr.mp3", image: "url(assets/page3.png)" },
+    es: { audio: "languages/voice_es.mp3", image: "url(assets/page3.png)" },
+    it: { audio: "languages/voice_it.mp3", image: "url(assets/page3.png)" }
+};
+
+const ui = document.getElementById('interface');
+let currentAudio = null;
+let isPlaying = false;
+
+// A L'OUVERTURE
+window.onload = function() {
+    ui.style.backgroundImage = "url(assets/page1.png)";
+};
+
+function speakKlara(langKey) {
+
+    if (isPlaying) {
+        if(currentAudio) currentAudio.pause();
+        ui.style.backgroundImage = "url(assets/page2.png)";
+        isPlaying = false;
+        return;
+    }
+
+    let media = mediaFiles[langKey];
+    currentAudio = new Audio(media.audio);
+    isPlaying = true;
+    ui.style.backgroundImage = media.image;
+
+    currentAudio.onended = function () {
+        isPlaying = false;
+        ui.style.backgroundImage = "url(assets/page2.png)";
+        currentAudio = null;
+    };
+
+    currentAudio.play();
+}
+
+</script>
+
+</body>
+</html>
