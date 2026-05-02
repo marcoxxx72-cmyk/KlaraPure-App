@@ -17,6 +17,7 @@
             font-family: sans-serif;
         }
 
+        /* ON AFFICHE JUSTE TON IMAGE SANS RIEN D'AUTRE */
         .interface-container {
             position: relative;
             width: 90%;
@@ -30,73 +31,31 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
 
-        .content-box {
+        /* ZONES DE CLIC INVISIBLES SUR LES BOUTONS DE L'IMAGE */
+        .click-area {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(10px);
-            padding: 30px 40px;
-            border-radius: 15px;
-            text-align: center;
-            min-width: 60%;
-        }
-
-        .title {
-            font-size: 28px;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 8px;
-        }
-
-        .subtitle {
-            font-size: 14px;
-            color: #7f8c8d;
-            margin-bottom: 25px;
-        }
-
-        /* --- BOUTONS PARFAITEMENT ALIGNÉS ET SERRÉS --- */
-        .lang-buttons {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px; /* Très peu d'espace entre eux */
-        }
-
-        .lang-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            padding: 8px 14px;
-            background: white;
-            border: 1px solid #bdc3c7;
-            border-radius: 8px;
+            top: 54%;
+            width: 85px;
+            height: 42px;
             cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 16px;
-            width: 80px; /* Taille identique */
-            height: 40px;
+            background: transparent;
         }
+        #area-en { left: 18%; }
+        #area-fr { left: 34%; }
+        #area-es { left: 50%; }
+        #area-it { left: 66%; }
 
-        .lang-btn:hover {
-            background: #f8f9fa;
-        }
-
-        .lang-btn img {
-            width: 22px;
-            height: auto;
-        }
-
-        /* --- Styles des Ondes --- */
+        /* --- STYLES DES ONDES --- */
         .wave-container {
+            position: absolute;
+            bottom: 22%;
+            left: 50%;
+            transform: translateX(-50%);
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 4px;
             height: 60px;
-            margin-top: 20px;
             transition: opacity 0.3s ease;
         }
 
@@ -124,41 +83,29 @@
 <body>
 
 <div class="interface-container">
-    <div class="content-box">
-        <div class="title">Klara Pure ©</div>
-        <div class="subtitle">Voice Engine v7.0</div>
 
-        <div class="lang-buttons">
-            <button class="lang-btn" onclick="playAudio('en')">
-                <img src="https://flagcdn.com/w40/gb.png" alt="EN"> EN
-            </button>
-            <button class="lang-btn" onclick="playAudio('fr')">
-                <img src="https://flagcdn.com/w40/fr.png" alt="FR"> FR
-            </button>
-            <button class="lang-btn" onclick="playAudio('es')">
-                <img src="https://flagcdn.com/w40/es.png" alt="ES"> ES
-            </button>
-            <button class="lang-btn" onclick="playAudio('it')">
-                <img src="https://flagcdn.com/w40/it.png" alt="IT"> IT
-            </button>
-        </div>
+    <!-- ZONES INVISIBLES POUR LE CLIC -->
+    <div id="area-en" class="click-area" onclick="playAudio('en')"></div>
+    <div id="area-fr" class="click-area" onclick="playAudio('fr')"></div>
+    <div id="area-es" class="click-area" onclick="playAudio('es')"></div>
+    <div id="area-it" class="click-area" onclick="playAudio('it')"></div>
 
-        <div class="wave-container" id="waveVisualizer">
-            <div class="wave-bar animate-wave-1"></div>
-            <div class="wave-bar animate-wave-2"></div>
-            <div class="wave-bar animate-wave-3"></div>
-            <div class="wave-bar animate-wave-4"></div>
-            <div class="wave-bar animate-wave-5"></div>
-            <div class="wave-bar animate-wave-6"></div>
-            <div class="wave-bar animate-wave-7"></div>
-            <div class="wave-bar animate-wave-5"></div>
-            <div class="wave-bar animate-wave-4"></div>
-            <div class="wave-bar animate-wave-3"></div>
-            <div class="wave-bar animate-wave-2"></div>
-            <div class="wave-bar animate-wave-1"></div>
-        </div>
-
+    <!-- LES ONDES BLEUES -->
+    <div class="wave-container" id="waveVisualizer">
+        <div class="wave-bar animate-wave-1"></div>
+        <div class="wave-bar animate-wave-2"></div>
+        <div class="wave-bar animate-wave-3"></div>
+        <div class="wave-bar animate-wave-4"></div>
+        <div class="wave-bar animate-wave-5"></div>
+        <div class="wave-bar animate-wave-6"></div>
+        <div class="wave-bar animate-wave-7"></div>
+        <div class="wave-bar animate-wave-5"></div>
+        <div class="wave-bar animate-wave-4"></div>
+        <div class="wave-bar animate-wave-3"></div>
+        <div class="wave-bar animate-wave-2"></div>
+        <div class="wave-bar animate-wave-1"></div>
     </div>
+
 </div>
 
 <script>
@@ -177,12 +124,9 @@
             currentAudio.pause();
             currentAudio.currentTime = 0;
         }
-
         currentAudio = new Audio(audioFiles[lang]);
         currentAudio.play();
-
         waveContainer.style.opacity = "1";
-
         currentAudio.onended = function() {
             waveContainer.style.opacity = "0.3";
         };
