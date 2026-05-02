@@ -1,1 +1,169 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klara Pure Interface</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #e0f7fa;
+        }
 
+        .interface {
+            position: relative;
+            width: 90%;
+            max-width: 900px;
+            margin-left: 80px; /* Décalage vers la droite */
+        }
+
+        .interface img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            opacity: 0.85; /* Plus transparent */
+        }
+
+        /* --- LES ONDES BLEUES --- */
+        .wave-container {
+            position: absolute;
+            bottom: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            height: 60px;
+            transition: opacity 0.3s ease;
+        }
+
+        .wave-bar {
+            width: 5px;
+            background: #87CEEB;
+            border-radius: 3px;
+            opacity: 0.8;
+        }
+
+        .animate-wave-1 { animation: wave 1.2s infinite ease-in-out; }
+        .animate-wave-2 { animation: wave 1.3s infinite ease-in-out; }
+        .animate-wave-3 { animation: wave 1.1s infinite ease-in-out; }
+        .animate-wave-4 { animation: wave 1.4s infinite ease-in-out; }
+        .animate-wave-5 { animation: wave 1.0s infinite ease-in-out; }
+        .animate-wave-6 { animation: wave 1.5s infinite ease-in-out; }
+        .animate-wave-7 { animation: wave 0.9s infinite ease-in-out; }
+
+        @keyframes wave {
+            0%, 100% { transform: scaleY(0.2); }
+            50% { transform: scaleY(1); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="interface">
+    <img src="src/assets/page1.png" alt="Interface Klara Pure">
+
+    <div class="wave-container" id="waveVisualizer">
+        <div class="wave-bar animate-wave-1"></div>
+        <div class="wave-bar animate-wave-2"></div>
+        <div class="wave-bar animate-wave-3"></div>
+        <div class="wave-bar animate-wave-4"></div>
+        <div class="wave-bar animate-wave-5"></div>
+        <div class="wave-bar animate-wave-6"></div>
+        <div class="wave-bar animate-wave-7"></div>
+        <div class="wave-bar animate-wave-5"></div>
+        <div class="wave-bar animate-wave-4"></div>
+        <div class="wave-bar animate-wave-3"></div>
+        <div class="wave-bar animate-wave-2"></div>
+        <div class="wave-bar animate-wave-1"></div>
+    </div>
+</div>
+
+<script>
+    const audioFiles = {
+        en: "voice_en.mp3",
+        fr: "voice_fr.mp3",
+        es: "voice_es.mp3",
+        it: "voice_it.mp3"
+    };
+
+    let currentAudio = null;
+    const waveContainer = document.getElementById('waveVisualizer');
+
+    function playAudio(lang) {
+        if (currentAudio) {
+            currentAudio.pause();
+            currentAudio.currentTime = 0;
+        }
+        currentAudio = new Audio(audioFiles[lang]);
+        currentAudio.play();
+        waveContainer.style.opacity = "1";
+        
+        currentAudio.onended = function() {
+            waveContainer.style.opacity = "0.3";
+        };
+    }
+
+    window.onload = function() {
+        waveContainer.style.opacity = "0.3";
+    };
+
+    // --- ZONES DE CLIC SANS MODIFICATION ---
+    const interfaceDiv = document.querySelector('.interface');
+
+    // ANGLETERRE
+    const areaEn = document.createElement('div');
+    areaEn.style.position = 'absolute';
+    areaEn.style.top = '58%';
+    areaEn.style.left = '19%';
+    areaEn.style.width = '100px';
+    areaEn.style.height = '50px';
+    areaEn.style.cursor = 'pointer';
+    areaEn.onclick = () => playAudio('en');
+    interfaceDiv.appendChild(areaEn);
+
+    // FRANCE
+    const areaFr = document.createElement('div');
+    areaFr.style.position = 'absolute';
+    areaFr.style.top = '58%';
+    areaFr.style.left = '36%';
+    areaFr.style.width = '100px';
+    areaFr.style.height = '50px';
+    areaFr.style.cursor = 'pointer';
+    areaFr.onclick = () => playAudio('fr');
+    interfaceDiv.appendChild(areaFr);
+
+    // ESPAGNE
+    const areaEs = document.createElement('div');
+    areaEs.style.position = 'absolute';
+    areaEs.style.top = '58%';
+    areaEs.style.left = '53%';
+    areaEs.style.width = '100px';
+    areaEs.style.height = '50px';
+    areaEs.style.cursor = 'pointer';
+    areaEs.onclick = () => playAudio('es');
+    interfaceDiv.appendChild(areaEs);
+
+    // ITALIE
+    const areaIt = document.createElement('div');
+    areaIt.style.position = 'absolute';
+    areaIt.style.top = '58%';
+    areaIt.style.left = '70%';
+    areaIt.style.width = '100px';
+    areaIt.style.height = '50px';
+    areaIt.style.cursor = 'pointer';
+    areaIt.onclick = () => playAudio('it');
+    interfaceDiv.appendChild(areaIt);
+
+</script>
+
+</body>
+</html>
