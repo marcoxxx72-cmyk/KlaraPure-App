@@ -5,88 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KlaraPure</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            overflow: hidden;
-            background-color: #87CEEB;
-        }
-
-        .container {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { overflow: hidden; background-color: #87CEEB; }
+        .container { position: relative; width: 100vw; height: 100vh; }
 
         #page1 {
-            position: absolute;
-            width: 100%;
-            height: 100%;
+            position: absolute; width: 100%; height: 100%;
             background-image: url('./src/assets/page1.png');
-            background-size: cover;
-            background-position: center;
-            z-index: 3;
-            transition: opacity 1.5s ease-in-out;
+            background-size: cover; background-position: center;
+            z-index: 3; transition: opacity 1.5s ease-in-out;
         }
-
         #page2 {
-            position: absolute;
-            width: 100%;
-            height: 100%;
+            position: absolute; width: 100%; height: 100%;
             background-image: url('./src/assets/page2.png');
-            background-size: cover;
-            background-position: center;
-            z-index: 1;
-            opacity: 0;
+            background-size: cover; background-position: center;
+            z-index: 1; opacity: 0;
             transition: opacity 1.5s ease-in-out;
             pointer-events: none;
         }
+        #page2.visible { opacity: 1; pointer-events: all; }
+        #page1.hidden  { opacity: 0; pointer-events: none; }
 
-        #page2.visible {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        #page1.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        /* --- WAVE CONTAINER --- */
         #wave-container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
+            position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 95%;
-            height: 250px;
-            display: none;
-            z-index: 10;
+            width: 95%; height: 250px;
+            display: none; z-index: 10;
         }
-
-        #wave-svg {
-            width: 100%;
-            height: 100%;
-            overflow: visible;
-        }
-
+        #wave-svg { width: 100%; height: 100%; overflow: visible; }
         #wave-line {
-            fill: none;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            stroke-width: 3.5;
+            fill: none; stroke-linecap: round;
+            stroke-linejoin: round; stroke-width: 3.5;
         }
-
         #wave-line-glow {
-            fill: none;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            stroke-width: 8;
-            opacity: 0.25;
+            fill: none; stroke-linecap: round;
+            stroke-linejoin: round; stroke-width: 8; opacity: 0.25;
         }
     </style>
 </head>
@@ -97,9 +50,7 @@
     <div id="page2">
         <div id="wave-container">
             <svg id="wave-svg" viewBox="0 0 1200 250" preserveAspectRatio="none">
-                <!-- Halo lumineux derrière la ligne principale -->
                 <path id="wave-line-glow" d=""></path>
-                <!-- Ligne principale -->
                 <path id="wave-line" d=""></path>
             </svg>
         </div>
@@ -113,56 +64,28 @@
     const page2         = document.getElementById('page2');
     const waveContainer = document.getElementById('wave-container');
 
-    const WIDTH    = 1200;
-    const HEIGHT   = 250;
-    const SEGMENTS = 120;
+    const WIDTH = 1200, HEIGHT = 250, SEGMENTS = 120;
+    let intensity = 0.3, targetIntensity = 0.3;
+    let animationId = null, energyTimeout = null, hasStarted = false;
 
-    let intensity       = 0.3;
-    let targetIntensity = 0.3;
-    let animationId     = null;
-    let energyTimeout   = null;
-    let hasStarted      = false;
-
-    /* ---- COULEUR DYNAMIQUE ----
-       intensity 0   → bleu ciel doux  hsl(200, 70%, 65%)
-       intensity 0.8 → cyan / turquoise hsl(170, 80%, 55%)
-       intensity 1.2 → violet chaud    hsl(270, 75%, 65%)
-       intensity 1.8+→ rouge vif        hsl(350, 90%, 58%)
-    */
     function getColor(intens) {
         const t = Math.min(intens / 1.8, 1);
         let h, s, l;
-
         if (t < 0.45) {
-            // bleu → cyan
             const u = t / 0.45;
-            h = 200 - (u * 30);
-            s = 70  + (u * 15);
-            l = 65  - (u * 8);
+            h = 200 - (u * 30); s = 70 + (u * 15); l = 65 - (u * 8);
         } else if (t < 0.75) {
-            // cyan → violet
             const u = (t - 0.45) / 0.30;
-            h = 170 - (u * -100); // 170 → 270
-            s = 85  - (u * 10);
-            l = 57  + (u * 8);
+            h = 170 + (u * 100); s = 85 - (u * 10); l = 57 + (u * 8);
         } else {
-            // violet → rouge
             const u = (t - 0.75) / 0.25;
-            h = 270 + (u * 80); // 270 → 350
-            s = 75  + (u * 15);
-            l = 65  - (u * 7);
+            h = 270 + (u * 80); s = 75 + (u * 15); l = 65 - (u * 7);
         }
-
         return `hsl(${Math.round(h)}, ${Math.round(s)}%, ${Math.round(l)}%)`;
     }
 
-    /* ---- DESSIN COURBE BEZIER ----
-       On génère des points, puis on les relie avec des courbes C cubiques
-       pour une onde 100% fluide, sans angles.
-    */
     function buildSmoothPath(time) {
         const amp = 8 + (intensity * 65);
-
         const points = [];
         for (let i = 0; i <= SEGMENTS; i++) {
             const x = (i / SEGMENTS) * WIDTH;
@@ -174,30 +97,22 @@
                 + Math.cos((i * 0.08) + phase * 0.25) * (amp * 0.30);
             points.push({ x, y });
         }
-
-        // Courbes de Bézier cubiques — contrôle tension
         let d = `M ${points[0].x.toFixed(1)} ${points[0].y.toFixed(1)}`;
         for (let i = 0; i < points.length - 1; i++) {
-            const p0 = points[i];
-            const p1 = points[i + 1];
+            const p0 = points[i], p1 = points[i + 1];
             const cx = (p0.x + p1.x) / 2;
             d += ` C ${cx.toFixed(1)} ${p0.y.toFixed(1)}, ${cx.toFixed(1)} ${p1.y.toFixed(1)}, ${p1.x.toFixed(1)} ${p1.y.toFixed(1)}`;
         }
-
         return d;
     }
 
     function drawWave(time) {
-        const path  = buildSmoothPath(time);
+        const path = buildSmoothPath(time);
         const color = getColor(intensity);
-
         waveLine.setAttribute('d', path);
         waveLine.setAttribute('stroke', color);
-
         waveLineGlow.setAttribute('d', path);
         waveLineGlow.setAttribute('stroke', color);
-
-        // Transition douce d'intensité
         intensity += (targetIntensity - intensity) * 0.05;
     }
 
@@ -212,17 +127,16 @@
     }
 
     function stopAnimation() {
-        if (animationId)    { cancelAnimationFrame(animationId); animationId = null; }
-        if (energyTimeout)  { clearTimeout(energyTimeout);       energyTimeout = null; }
+        if (animationId)   { cancelAnimationFrame(animationId); animationId = null; }
+        if (energyTimeout) { clearTimeout(energyTimeout); energyTimeout = null; }
         waveContainer.style.display = 'none';
     }
 
-    /* ---- AUDIO ---- */
     const audioFiles = {
-        en: './voice_en.mp3',
-        fr: './voice_fr.mp3',
-        es: './voice_es.mp3',
-        it: './voice_it.mp3'
+        en: './audio/voice_en.mp3',
+        fr: './audio/voice_fr.mp3',
+        es: './audio/voice_es.mp3',
+        it: './audio/voice_it.mp3'
     };
 
     let currentAudio = null;
@@ -230,10 +144,8 @@
     function startApp(lang) {
         if (hasStarted) return;
         hasStarted = true;
-
         console.log('Démarrage langue :', lang);
 
-        // FIX #1 — retirer hidden ET ajouter visible sur page2
         page1.classList.add('hidden');
         page2.classList.add('visible');
         waveContainer.style.display = 'block';
@@ -241,41 +153,21 @@
         animate();
         simulateSoundEnergy();
 
-        // FIX #2 — gestion audio propre
-        if (currentAudio) {
-            currentAudio.pause();
-            currentAudio.currentTime = 0;
-        }
+        if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
 
         currentAudio = new Audio(audioFiles[lang]);
-
-        // FIX #3 — gestion d'erreur audio (EN / IT silencieux sans ça)
-        currentAudio.onerror = function () {
-            console.error('Fichier audio introuvable :', audioFiles[lang]);
-            // On laisse la waveform tourner même si l'audio échoue
-        };
-
-        currentAudio.onended = function () {
-            // FIX #4 — style.display (pas styleDisplay)
-            stopAnimation();
-        };
-
-        currentAudio.play().catch(function (err) {
-            console.warn('Lecture audio bloquée (autoplay policy) :', err);
-        });
+        currentAudio.onerror = () => console.error('Audio introuvable :', audioFiles[lang]);
+        currentAudio.onended = () => stopAnimation();
+        currentAudio.play().catch(err => console.warn('Autoplay bloqué :', err));
     }
 
-    /* ---- DETECTION DE ZONE (4 quadrants) ---- */
-    page1.addEventListener('click', function (e) {
-        const x = e.clientX;
-        const w = window.innerWidth;
-
+    page1.addEventListener('click', function(e) {
+        const x = e.clientX, w = window.innerWidth;
         if      (x < w * 0.25) { startApp('en'); }
         else if (x < w * 0.50) { startApp('fr'); }
         else if (x < w * 0.75) { startApp('es'); }
         else                   { startApp('it'); }
     });
-
 </script>
 
 </body>
