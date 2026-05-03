@@ -1,1 +1,198 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KlaraPure</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            overflow: hidden;
+            background-color: #87CEEB;
+        }
 
+        .container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* --- PAGES --- */
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        #page1 {
+            background-image: url('./src/assets/page1.png');
+            z-index: 3;
+        }
+
+        #page2 {
+            background-image: url('./src/assets/page2.png');
+            z-index: 1;
+            opacity: 0;
+        }
+
+        .hidden { 
+            opacity: 0 !important; 
+            pointer-events: none; 
+        }
+
+        .visible { 
+            opacity: 1 !important; 
+            pointer-events: all; 
+        }
+
+        /* --- LA LIGNE QUI RESPIRE --- */
+        #wave-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            height: 180px;
+            display: none;
+            z-index: 10;
+        }
+
+        #wave-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        #wave-line {
+            fill: none;
+            stroke-linecap: round;
+            stroke-width: 4;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="page1" class="page"></div>
+    <div id="page2" class="page">
+        <div id="wave-container">
+            <svg id="wave-svg" viewBox="0 0 800 180">
+                <path id="wave-line" d=""></path>
+            </svg>
+        </div>
+    </div>
+</div>
+
+<script>
+    const waveLine = document.getElementById('wave-line');
+    const width = 800;
+    const height = 180;
+    const segments = 60;
+
+    let intensity = 1; 
+    let targetIntensity = 1;
+
+    function drawWave(time) {
+        // TAILLE : Respiration
+        const amplitude = 5 + (intensity * 60); 
+
+        // COULEUR : Bleu ou Rouge
+        let color;
+        if (intensity > 1.2) {
+            color = `rgb(255, 60, 80)`; // ROUGE AGRESSIF
+        } else {
+            color = `rgb(135, 206, 235)`; // BLEU CIEL DOUX
+        }
+
+        waveLine.setAttribute('stroke', color);
+        waveLine.setAttribute('filter', `drop-shadow(0 0 ${5 * intensity}px ${color})`);
+
+        // FORME : Ligne fluide et arrondi
+        let pathData = `M 0 ${height/2}`;
+        for(let i = 0; i <= segments; i++) {
+            const x = (i / segments) * width;
+            const y = Math.sin((i * 0.4) + (time * 0.001)) * amplitude 
+                    + Math.sin((i * 0.1) + (time * 0.0005)) * (amplitude * 0.5)
+                    + height / 2;
+            pathData += ` L ${x} ${y}`;
+        }
+        waveLine.setAttribute('d', pathData);
+
+        intensity += (targetIntensity - intensity) * 0.1;
+    }
+
+    function simulateSoundEnergy() {
+        targetIntensity = 0.1 + Math.random() * 1.5; 
+        setTimeout(simulateSoundEnergy, 300 + Math.random() * 700);
+    }
+
+    let animationId;
+    function animate() {
+        drawWave(Date.now());
+        animationId = requestAnimationFrame(animate);
+    }
+
+    // --- FICHIERS AUDIO PAR LANGUE ---
+    const audioFiles = {
+        en: "./voice_en.mp3",
+        fr: "./voice_fr.mp3",
+        es: "./voice_es.mp3",
+        it: "./voice_it.mp3"
+    };
+
+    let currentAudio = null;
+
+    function startApp(lang) {
+        console.log("Demarrage de la langue : " + lang);
+        
+        document.getElementById('page1').classList.add('hidden');
+        document.getElementById('page2').classList.add('visible');
+        document.getElementById('wave-container').style.display = 'block';
+        
+        animate();
+        simulateSoundEnergy();
+
+        // Arrete l'ancienne voix si elle tourne
+        if(currentAudio) {
+            currentAudio.pause();
+            currentAudio.currentTime = 0;
+        }
+
+        // LANCE LA BONNE VOIX SELON LE CLIC
+        currentAudio = new Audio(audioFiles[lang]);
+        currentAudio.play();
+
+        currentAudio.onended = function() {
+            document.getElementById('wave-container').style.display = 'none';
+            cancelAnimationFrame(animationId);
+        };
+    }
+
+    // --- ZONES CLICABLES POUR CHAQUE LANGUE ---
+    // Adapte les coordonnées si besoin, mais ça marche !
+    document.getElementById('page1').addEventListener('click', function(e) {
+        const x = e.clientX;
+        const y = e.clientY;
+        
+        // Exemple de zones approximatives (à ajuster si besoin)
+        if (x < window.innerWidth * 0.25) {
+            startApp('en'); // Cote gauche = Anglais
+        } else if (x < window.innerWidth * 0.50) {
+            startApp('fr'); // Milieu gauche = Français
+        } else if (x < window.innerWidth * 0.75) {
+            startApp('es'); // Milieu droite = Espagnol
+        } else {
+            startApp('it'); // Cote droit = Italien
+        }
+    });
+
+</script>
+
+</body>
+</html>
