@@ -96,19 +96,19 @@
     const waveLine = document.getElementById('wave-line');
     const width = 800;
     const height = 220;
-    const segments = 100;
+    const segments = 100; // Lissage parfait
 
     let intensity = 0.4; 
     let targetIntensity = 0.4;
 
     function drawWave(time) {
-        // Taille et respiration
+        // 1. FORME ET MOUVEMENT : Riche, fluide et ondulé
         const amplitude = 8 + (intensity * 45); 
 
-        // Couleur : BLEU CIEL PAR DEFAUT. ROUGE SEULEMENT SI > 1.4
+        // 2. COULEUR : BLEU CIEL PAR DEFAUT. ROUGE SEULEMENT SI > 1.4
         let color;
         if (intensity > 1.4) {
-            color = `rgb(255, 45, 75)`; // ROUGEÂTRE
+            color = `rgb(255, 45, 75)`; // ROUGEÂTRE / AGRESSIF
         } else {
             color = `rgb(135, 206, 235)`; // BLEU CIEL DOUX
         }
@@ -116,10 +116,11 @@
         waveLine.setAttribute('stroke', color);
         waveLine.setAttribute('filter', `drop-shadow(0 0 ${5 * intensity}px ${color})`);
 
-        // DESSIN DE L'ONDE COMPLEXE (COMME SUR L'IMAGE)
+        // 3. DESSIN DE L'ONDE COMPLEXE (Style "Vague qui respire")
         let pathData = `M 0 ${height/2}`;
         for(let i = 0; i <= segments; i++) {
             const x = (i / segments) * width;
+            // Mélange de 3 fréquences pour un rendu organique et subtil
             const y = Math.sin((i * 0.25) + (time * 0.0006)) * amplitude 
                     + Math.sin((i * 0.6) + (time * 0.0012)) * (amplitude * 0.5)
                     + Math.sin((i * 1.8) + (time * 0.003)) * (amplitude * 0.15)
@@ -128,6 +129,7 @@
         }
         waveLine.setAttribute('d', pathData);
 
+        // Transition ultra douce
         intensity += (targetIntensity - intensity) * 0.04;
     }
 
@@ -142,8 +144,7 @@
         animationId = requestAnimationFrame(animate);
     }
 
-    // --- CONFIGURATION DES LANGUES SELON TES CONSIGNES ---
-    // ENG = FR / FR = FR / ES = ES / IT = ES
+    // --- CONFIGURATION DES LANGUES ---
     function getAudioFile(lang) {
         switch(lang) {
             case 'en': return './voice_fr.mp3';   // ANGLAIS → FRANCAIS
@@ -180,6 +181,7 @@
         };
     }
 
+    // ZONES DE CLIC
     document.getElementById('page1').addEventListener('click', function(e) {
         const x = e.clientX;
         const w = window.innerWidth;
