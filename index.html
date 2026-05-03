@@ -1,1 +1,218 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KlaraPure</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Playfair Display', serif;
+            overflow: hidden;
+            background-color: #87CEEB;
+        }
 
+        .container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* --- PAGES --- */
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        #page1 {
+            background-image: url('src/assets/page1.png');
+            z-index: 2;
+        }
+
+        #page2 {
+            background-image: url('src/assets/page2.png');
+            z-index: 1;
+            opacity: 0;
+        }
+
+        .hidden { opacity: 0 !important; pointer-events: none; }
+        .visible { opacity: 1 !important; pointer-events: all; }
+
+        /* --- CONTENU PAGE 1 --- */
+        .content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 10;
+            width: 100%;
+        }
+
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5rem;
+            color: white;
+            margin-bottom: 60px;
+            letter-spacing: 3px;
+            text-shadow: 0px 2px 15px rgba(0,0,0,0.2);
+        }
+
+        /* --- BOUTONS LANGUES REACTIFS --- */
+        .lang-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 14px 35px;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: sans-serif;
+        }
+
+        .lang-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(135, 206, 235, 0.4);
+        }
+
+        .lang-btn:active {
+            transform: translateY(0);
+        }
+
+        /* --- VISUALISEUR AUDIO STYLE DOUX --- */
+        #audio-wave {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            height: 120px;
+            display: none;
+            z-index: 5;
+        }
+
+        .bar {
+            position: absolute;
+            bottom: 50%;
+            background: #87CEEB; /* Bleu ciel pur */
+            border-radius: 2px;
+            box-shadow: 0 0 8px #87CEEB, 0 0 15px rgba(135, 206, 235, 0.5);
+            width: 3px;
+            opacity: 0.8;
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <!-- PAGE 1 -->
+    <div id="page1" class="page"></div>
+
+    <div class="content">
+        <h1 class="title">KlaraPure</h1>
+        <div class="lang-buttons">
+            <button class="lang-btn" onclick="startApp('en')">EN</button>
+            <button class="lang-btn" onclick="startApp('fr')">FR</button>
+            <button class="lang-btn" onclick="startApp('es')">ES</button>
+            <button class="lang-btn" onclick="startApp('it')">IT</button>
+        </div>
+    </div>
+
+    <!-- PAGE 2 -->
+    <div id="page2" class="page">
+        <div id="audio-wave"></div>
+    </div>
+</div>
+
+<script>
+    // Création des barres sonores
+    const waveContainer = document.getElementById('audio-wave');
+    const nbBars = 120;
+    const espace = 6;
+
+    for(let i=0; i < nbBars; i++) {
+        const bar = document.createElement('div');
+        bar.classList.add('bar');
+        bar.style.left = `${i * espace}px`;
+        bar.style.height = '2px'; // Taille mini au repos
+        waveContainer.appendChild(bar);
+    }
+    const bars = document.querySelectorAll('.bar');
+
+    // Animation DOUCE et fluide
+    function animateWaves() {
+        bars.forEach((bar, index) => {
+            // Mouvement sinusoidal très doux
+            const height = Math.sin((Date.now() / 1000) + index * 0.4) * 35 + Math.random() * 8;
+            bar.style.height = `${Math.abs(height) + 3}px`;
+        });
+        requestAnimationFrame(animateWaves);
+    }
+
+    // Liste des fichiers audio
+    const audioFiles = {
+        en: "voice_en.mp3",
+        fr: "voice_fr.mp3",
+        es: "voice_es.mp3",
+        it: "voice_it.mp3"
+    };
+
+    let currentAudio = null;
+    let animationId = null;
+
+    // Fonction principale
+    function startApp(lang) {
+        console.log("Langue : " + lang);
+
+        // Disparition page d'accueil
+        document.getElementById('page1').style.opacity = "0";
+        document.querySelector('.content').style.opacity = "0";
+
+        // Apparition page 2
+        setTimeout(() => {
+            document.getElementById('page2').classList.add('visible');
+            document.getElementById('audio-wave').style.display = 'block';
+
+            // Lancement animation douce
+            animateWaves();
+
+            // Lecture audio
+            if(currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+            }
+            currentAudio = new Audio(audioFiles[lang]);
+            currentAudio.play();
+
+            // Quand l'audio est fini, on arrête l'animation
+            currentAudio.onended = function() {
+                document.getElementById('audio-wave').style.display = 'none';
+                // Ici la page reste neutre, juste les nuages
+            };
+
+        }, 1000);
+    }
+</script>
+
+</body>
+</html>
