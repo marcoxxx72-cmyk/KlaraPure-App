@@ -3,91 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Klara Pure Interface</title>
+    <title>KlaraPure</title>
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #e0f7fa;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Playfair Display', serif;
+            overflow: hidden;
         }
 
-        .interface {
+        .container {
             position: relative;
-            width: 90%;
-            max-width: 900px;
-            margin-left: 80px; /* Décalage vers la droite */
+            width: 100vw;
+            height: 100vh;
         }
 
-        .interface img {
-            width: 100%;
-            height: auto;
-            display: block;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            opacity: 0.85; /* Plus transparent */
-        }
-
-        /* --- LES ONDES BLEUES --- */
-        .wave-container {
+        /* --- PAGES --- */
+        .page {
             position: absolute;
-            bottom: 15%;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        #page1 {
+            background-image: url('src/assets/page2.png'); /* Fond nuage */
+            z-index: 2;
+        }
+
+        #page2 {
+            background-image: url('src/assets/page2.png'); /* Même fond */
+            z-index: 1;
+            opacity: 0;
+        }
+
+        .hidden { opacity: 0 !important; pointer-events: none; }
+        .visible { opacity: 1 !important; pointer-events: all; }
+
+        /* --- CONTENU PAGE 1 --- */
+        .content {
+            position: absolute;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 10;
+            width: 100%;
+        }
+
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5rem;
+            color: white;
+            margin-bottom: 60px;
+            letter-spacing: 3px;
+            text-shadow: 0px 2px 15px rgba(0,0,0,0.2);
+        }
+
+        /* --- BOUTONS LANGUES REACTIFS --- */
+        .lang-buttons {
             display: flex;
             justify-content: center;
-            align-items: center;
-            gap: 4px;
-            height: 60px;
-            transition: opacity 0.3s ease;
+            gap: 20px;
+            flex-wrap: wrap;
         }
 
-        .wave-bar {
-            width: 5px;
-            background: #87CEEB;
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 14px 35px;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: sans-serif;
+            outline: none;
+        }
+
+        .lang-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(135, 206, 235, 0.4);
+        }
+
+        .lang-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(135, 206, 235, 0.4);
+        }
+
+        /* --- ANIMATION SONORE --- */
+        #audio-wave {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            height: 150px;
+            display: none;
+            z-index: 5;
+        }
+
+        .bar {
+            position: absolute;
+            bottom: 50%;
+            background: #87CEEB; /* Bleu ciel */
             border-radius: 3px;
-            opacity: 0.8;
-        }
-
-        .animate-wave-1 { animation: wave 1.2s infinite ease-in-out; }
-        .animate-wave-2 { animation: wave 1.3s infinite ease-in-out; }
-        .animate-wave-3 { animation: wave 1.1s infinite ease-in-out; }
-        .animate-wave-4 { animation: wave 1.4s infinite ease-in-out; }
-        .animate-wave-5 { animation: wave 1.0s infinite ease-in-out; }
-        .animate-wave-6 { animation: wave 1.5s infinite ease-in-out; }
-        .animate-wave-7 { animation: wave 0.9s infinite ease-in-out; }
-
-        @keyframes wave {
-            0%, 100% { transform: scaleY(0.2); }
-            50% { transform: scaleY(1); }
+            box-shadow: 0 0 8px #87CEEB, 0 0 20px #87CEEB;
+            width: 4px;
         }
     </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<div class="interface">
-    <img src="src/assets/page1.png" alt="Interface Klara Pure">
+<div class="container">
+    <!-- PAGE 1 -->
+    <div id="page1" class="page"></div>
 
-    <div class="wave-container" id="waveVisualizer">
-        <div class="wave-bar animate-wave-1"></div>
-        <div class="wave-bar animate-wave-2"></div>
-        <div class="wave-bar animate-wave-3"></div>
-        <div class="wave-bar animate-wave-4"></div>
-        <div class="wave-bar animate-wave-5"></div>
-        <div class="wave-bar animate-wave-6"></div>
-        <div class="wave-bar animate-wave-7"></div>
-        <div class="wave-bar animate-wave-5"></div>
-        <div class="wave-bar animate-wave-4"></div>
-        <div class="wave-bar animate-wave-3"></div>
-        <div class="wave-bar animate-wave-2"></div>
-        <div class="wave-bar animate-wave-1"></div>
+    <div class="content">
+        <h1 class="title">KlaraPure</h1>
+        <div class="lang-buttons">
+            <button class="lang-btn" onclick="startApp('en')">EN</button>
+            <button class="lang-btn" onclick="startApp('fr')">FR</button>
+            <button class="lang-btn" onclick="startApp('es')">ES</button>
+            <button class="lang-btn" onclick="startApp('it')">IT</button>
+        </div>
+    </div>
+
+    <!-- PAGE 2 -->
+    <div id="page2" class="page">
+        <div id="audio-wave"></div>
     </div>
 </div>
 
 <script>
+    // Création des barres sonores
+    const waveContainer = document.getElementById('audio-wave');
+    const nbBars = 120;
+    const espace = 6;
+
+    for(let i=0; i < nbBars; i++) {
+        const bar = document.createElement('div');
+        bar.classList.add('bar');
+        bar.style.left = `${i * espace}px`;
+        waveContainer.appendChild(bar);
+    }
+    const bars = document.querySelectorAll('.bar');
+
+    // Animation des ondes
+    function animateWaves() {
+        bars.forEach((bar, index) => {
+            const height = Math.sin((Date.now() / 700) + index * 0.7) * 50 + Math.random() * 15;
+            bar.style.height = `${Math.abs(height) + 5}px`;
+        });
+        requestAnimationFrame(animateWaves);
+    }
+
+    // Liste des fichiers audio (correspond à tes fichiers sur GitHub)
     const audioFiles = {
         en: "voice_en.mp3",
         fr: "voice_fr.mp3",
@@ -96,73 +177,31 @@
     };
 
     let currentAudio = null;
-    const waveContainer = document.getElementById('waveVisualizer');
 
-    function playAudio(lang) {
-        if (currentAudio) {
-            currentAudio.pause();
-            currentAudio.currentTime = 0;
-        }
-        currentAudio = new Audio(audioFiles[lang]);
-        currentAudio.play();
-        waveContainer.style.opacity = "1";
-        
-        currentAudio.onended = function() {
-            waveContainer.style.opacity = "0.3";
-        };
+    // Fonction principale
+    function startApp(lang) {
+        console.log("Lancement en : " + lang);
+
+        // 1. On cache la page d'accueil
+        document.getElementById('page1').style.opacity = "0";
+        document.querySelector('.content').style.opacity = "0";
+
+        // 2. On affiche la page 2 après un court délai
+        setTimeout(() => {
+            document.getElementById('page2').classList.add('visible');
+            document.getElementById('audio-wave').style.display = 'block';
+            animateWaves(); // Lancement de l'animation
+
+            // 3. Lecture du message de bienvenue
+            if(currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+            }
+            currentAudio = new Audio(audioFiles[lang]);
+            currentAudio.play(); // Ça parle !
+
+        }, 800);
     }
-
-    window.onload = function() {
-        waveContainer.style.opacity = "0.3";
-    };
-
-    // --- ZONES DE CLIC SANS MODIFICATION ---
-    const interfaceDiv = document.querySelector('.interface');
-
-    // ANGLETERRE
-    const areaEn = document.createElement('div');
-    areaEn.style.position = 'absolute';
-    areaEn.style.top = '58%';
-    areaEn.style.left = '19%';
-    areaEn.style.width = '100px';
-    areaEn.style.height = '50px';
-    areaEn.style.cursor = 'pointer';
-    areaEn.onclick = () => playAudio('en');
-    interfaceDiv.appendChild(areaEn);
-
-    // FRANCE
-    const areaFr = document.createElement('div');
-    areaFr.style.position = 'absolute';
-    areaFr.style.top = '58%';
-    areaFr.style.left = '36%';
-    areaFr.style.width = '100px';
-    areaFr.style.height = '50px';
-    areaFr.style.cursor = 'pointer';
-    areaFr.onclick = () => playAudio('fr');
-    interfaceDiv.appendChild(areaFr);
-
-    // ESPAGNE
-    const areaEs = document.createElement('div');
-    areaEs.style.position = 'absolute';
-    areaEs.style.top = '58%';
-    areaEs.style.left = '53%';
-    areaEs.style.width = '100px';
-    areaEs.style.height = '50px';
-    areaEs.style.cursor = 'pointer';
-    areaEs.onclick = () => playAudio('es');
-    interfaceDiv.appendChild(areaEs);
-
-    // ITALIE
-    const areaIt = document.createElement('div');
-    areaIt.style.position = 'absolute';
-    areaIt.style.top = '58%';
-    areaIt.style.left = '70%';
-    areaIt.style.width = '100px';
-    areaIt.style.height = '50px';
-    areaIt.style.cursor = 'pointer';
-    areaIt.onclick = () => playAudio('it');
-    interfaceDiv.appendChild(areaIt);
-
 </script>
 
 </body>
