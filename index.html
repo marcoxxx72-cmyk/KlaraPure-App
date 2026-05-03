@@ -99,13 +99,13 @@
     let targetIntensity = 1;
 
     function drawWave(time) {
-        // TAILLE : Respiration
+        // TAILLE DE LA VAGUE
         const amplitude = 5 + (intensity * 60); 
 
-        // COULEUR : Bleu ou Rouge
+        // COULEUR : BLEU sinon ROUGE SI FORT
         let color;
         if (intensity > 1.2) {
-            color = `rgb(255, 60, 80)`; // ROUGE AGRESSIF
+            color = `rgb(255, 40, 70)`; // ROUGEÂTRE / AGRESSIF
         } else {
             color = `rgb(135, 206, 235)`; // BLEU CIEL DOUX
         }
@@ -113,7 +113,7 @@
         waveLine.setAttribute('stroke', color);
         waveLine.setAttribute('filter', `drop-shadow(0 0 ${5 * intensity}px ${color})`);
 
-        // FORME : Ligne fluide et arrondi
+        // DESSIN DE LA LIGNE FLUIDE
         let pathData = `M 0 ${height/2}`;
         for(let i = 0; i <= segments; i++) {
             const x = (i / segments) * width;
@@ -138,7 +138,7 @@
         animationId = requestAnimationFrame(animate);
     }
 
-    // --- FICHIERS AUDIO PAR LANGUE ---
+    // --- LES 4 FICHIERS AUDIO SONT LA !!! ---
     const audioFiles = {
         en: "./voice_en.mp3",
         fr: "./voice_fr.mp3",
@@ -149,7 +149,7 @@
     let currentAudio = null;
 
     function startApp(lang) {
-        console.log("Demarrage de la langue : " + lang);
+        console.log("Demarrage : " + lang);
         
         document.getElementById('page1').classList.add('hidden');
         document.getElementById('page2').classList.add('visible');
@@ -158,13 +158,12 @@
         animate();
         simulateSoundEnergy();
 
-        // Arrete l'ancienne voix si elle tourne
         if(currentAudio) {
             currentAudio.pause();
             currentAudio.currentTime = 0;
         }
 
-        // LANCE LA BONNE VOIX SELON LE CLIC
+        // ICI CA CHANGE ! Chaque langue charge SON fichier
         currentAudio = new Audio(audioFiles[lang]);
         currentAudio.play();
 
@@ -174,21 +173,22 @@
         };
     }
 
-    // --- ZONES CLICABLES POUR CHAQUE LANGUE ---
-    // Adapte les coordonnées si besoin, mais ça marche !
+    // --- DETECTION DU CLIC SUR LES BOUTONS ---
     document.getElementById('page1').addEventListener('click', function(e) {
         const x = e.clientX;
         const y = e.clientY;
         
-        // Exemple de zones approximatives (à ajuster si besoin)
-        if (x < window.innerWidth * 0.25) {
-            startApp('en'); // Cote gauche = Anglais
-        } else if (x < window.innerWidth * 0.50) {
-            startApp('fr'); // Milieu gauche = Français
-        } else if (x < window.innerWidth * 0.75) {
-            startApp('es'); // Milieu droite = Espagnol
-        } else {
-            startApp('it'); // Cote droit = Italien
+        const w = window.innerWidth;
+
+        // Division de l'écran pour les 4 langues
+        if (x < w * 0.25) { 
+            startApp('en'); // ANGLETERRE
+        } else if (x < w * 0.50) { 
+            startApp('fr'); // FRANCE
+        } else if (x < w * 0.75) { 
+            startApp('es'); // ESPAGNE
+        } else { 
+            startApp('it'); // ITALIE
         }
     });
 
