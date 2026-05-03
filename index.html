@@ -6,7 +6,9 @@
     <title>KlaraPure</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body { overflow: hidden; background-color: #87CEEB; }
+
         .container { position: relative; width: 100vw; height: 100vh; }
 
         #page1 {
@@ -15,6 +17,7 @@
             background-size: cover; background-position: center;
             z-index: 3; transition: opacity 1.5s ease-in-out;
         }
+
         #page2 {
             position: absolute; width: 100%; height: 100%;
             background-image: url('./src/assets/page2.png');
@@ -23,24 +26,23 @@
             transition: opacity 1.5s ease-in-out;
             pointer-events: none;
         }
+
         #page2.visible { opacity: 1; pointer-events: all; }
         #page1.hidden  { opacity: 0; pointer-events: none; }
 
         #wave-container {
-            position: absolute; top: 50%; left: 50%;
+            position: absolute;
+            top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 95%; height: 250px;
+            width: 100%; height: 320px;
             display: none; z-index: 10;
         }
+
         #wave-svg { width: 100%; height: 100%; overflow: visible; }
-        #wave-line {
-            fill: none; stroke-linecap: round;
-            stroke-linejoin: round; stroke-width: 3.5;
-        }
-        #wave-line-glow {
-            fill: none; stroke-linecap: round;
-            stroke-linejoin: round; stroke-width: 8; opacity: 0.25;
-        }
+
+        .wave-glow { fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-width: 18; opacity: 0.07; }
+        .wave-mid  { fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-width: 6;  opacity: 0.28; }
+        .wave-main { fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.2; opacity: 0.90; }
     </style>
 </head>
 <body>
@@ -49,87 +51,82 @@
     <div id="page1"></div>
     <div id="page2">
         <div id="wave-container">
-            <svg id="wave-svg" viewBox="0 0 1200 250" preserveAspectRatio="none">
-                <path id="wave-line-glow" d=""></path>
-                <path id="wave-line" d=""></path>
+            <svg id="wave-svg" viewBox="0 0 1400 320" preserveAspectRatio="none">
+                <path id="wg" class="wave-glow" d=""></path>
+                <path id="wm" class="wave-mid"  d=""></path>
+                <path id="wl" class="wave-main" d=""></path>
             </svg>
         </div>
     </div>
 </div>
 
 <script>
-    const waveLine      = document.getElementById('wave-line');
-    const waveLineGlow  = document.getElementById('wave-line-glow');
+    const wg            = document.getElementById('wg');
+    const wm            = document.getElementById('wm');
+    const wl            = document.getElementById('wl');
     const page1         = document.getElementById('page1');
     const page2         = document.getElementById('page2');
     const waveContainer = document.getElementById('wave-container');
 
-    const WIDTH = 1200, HEIGHT = 250, SEGMENTS = 120;
-    let intensity = 0.3, targetIntensity = 0.3;
-    let animationId = null, energyTimeout = null, hasStarted = false;
+    const W      = 1400;
+    const H      = 320;
+    const CENTER = H / 2;
 
-    function getColor(intens) {
-        const t = Math.min(intens / 1.8, 1);
-        let h, s, l;
-        if (t < 0.45) {
-            const u = t / 0.45;
-            h = 200 - (u * 30); s = 70 + (u * 15); l = 65 - (u * 8);
-        } else if (t < 0.75) {
-            const u = (t - 0.45) / 0.30;
-            h = 170 + (u * 100); s = 85 - (u * 10); l = 57 + (u * 8);
-        } else {
-            const u = (t - 0.75) / 0.25;
-            h = 270 + (u * 80); s = 75 + (u * 15); l = 65 - (u * 7);
-        }
-        return `hsl(${Math.round(h)}, ${Math.round(s)}%, ${Math.round(l)}%)`;
-    }
+    let breathAmp    = 0;
+    let breathTarget = 0.4;
+    let animationId  = null;
+    let breathTimer  = null;
+    let hasStarted   = false;
 
-    function buildSmoothPath(time) {
-        const amp = 8 + (intensity * 65);
-        const points = [];
-        for (let i = 0; i <= SEGMENTS; i++) {
-            const x = (i / SEGMENTS) * WIDTH;
-            const phase = time * 0.001;
-            const y = HEIGHT / 2
-                + Math.sin((i * 0.15) + phase * 0.40) * amp
-                + Math.sin((i * 0.42) + phase * 1.00) * (amp * 0.45)
-                + Math.sin((i * 1.10) + phase * 2.10) * (amp * 0.18)
-                + Math.cos((i * 0.08) + phase * 0.25) * (amp * 0.30);
-            points.push({ x, y });
-        }
-        let d = `M ${points[0].x.toFixed(1)} ${points[0].y.toFixed(1)}`;
-        for (let i = 0; i < points.length - 1; i++) {
-            const p0 = points[i], p1 = points[i + 1];
-            const cx = (p0.x + p1.x) / 2;
-            d += ` C ${cx.toFixed(1)} ${p0.y.toFixed(1)}, ${cx.toFixed(1)} ${p1.y.toFixed(1)}, ${p1.x.toFixed(1)} ${p1.y.toFixed(1)}`;
+    const BLUE = 'rgb(100, 180, 230)';
+
+    function buildWavePath(time) {
+        const t   = time * 0.001;
+        const amp = 18 + breathAmp * 72;
+
+        const wave1 = (x) => Math.sin(x * 0.0045 + t * 0.38) * amp;
+        const wave2 = (x) => Math.sin(x * 0.011  + t * 0.72) * (amp * 0.42);
+        const wave3 = (x) => Math.sin(x * 0.024  + t * 1.10) * (amp * 0.18);
+
+        const STEPS = 280;
+        let d = '';
+        for (let i = 0; i <= STEPS; i++) {
+            const x = (i / STEPS) * W;
+            const y = CENTER + wave1(x) + wave2(x) + wave3(x);
+            d += (i === 0
+                ? `M ${x.toFixed(1)} ${y.toFixed(1)}`
+                : ` L ${x.toFixed(1)} ${y.toFixed(1)}`);
         }
         return d;
     }
 
-    function drawWave(time) {
-        const path = buildSmoothPath(time);
-        const color = getColor(intensity);
-        waveLine.setAttribute('d', path);
-        waveLine.setAttribute('stroke', color);
-        waveLineGlow.setAttribute('d', path);
-        waveLineGlow.setAttribute('stroke', color);
-        intensity += (targetIntensity - intensity) * 0.05;
+    function drawFrame() {
+        const now  = Date.now();
+        const path = buildWavePath(now);
+
+        wg.setAttribute('d', path);  wg.setAttribute('stroke', BLUE);
+        wm.setAttribute('d', path);  wm.setAttribute('stroke', BLUE);
+        wl.setAttribute('d', path);  wl.setAttribute('stroke', BLUE);
+
+        breathAmp += (breathTarget - breathAmp) * 0.025;
+        animationId = requestAnimationFrame(drawFrame);
     }
 
-    function simulateSoundEnergy() {
-        targetIntensity = 0.15 + Math.random() * 1.7;
-        energyTimeout = setTimeout(simulateSoundEnergy, 400 + Math.random() * 700);
-    }
-
-    function animate() {
-        drawWave(Date.now());
-        animationId = requestAnimationFrame(animate);
+    function breathCycle() {
+        breathTarget = 0.08 + Math.random() * 0.80;
+        breathTimer  = setTimeout(breathCycle, 700 + Math.random() * 1100);
     }
 
     function stopAnimation() {
-        if (animationId)   { cancelAnimationFrame(animationId); animationId = null; }
-        if (energyTimeout) { clearTimeout(energyTimeout); energyTimeout = null; }
-        waveContainer.style.display = 'none';
+        if (animationId) { cancelAnimationFrame(animationId); animationId = null; }
+        if (breathTimer) { clearTimeout(breathTimer); breathTimer = null; }
+        waveContainer.style.transition = 'opacity 1.2s ease';
+        waveContainer.style.opacity    = '0';
+        setTimeout(() => {
+            waveContainer.style.display    = 'none';
+            waveContainer.style.opacity    = '1';
+            waveContainer.style.transition = '';
+        }, 1200);
     }
 
     const audioFiles = {
@@ -144,14 +141,15 @@
     function startApp(lang) {
         if (hasStarted) return;
         hasStarted = true;
-        console.log('Démarrage langue :', lang);
+
+        console.log('Langue :', lang);
 
         page1.classList.add('hidden');
         page2.classList.add('visible');
         waveContainer.style.display = 'block';
 
-        animate();
-        simulateSoundEnergy();
+        drawFrame();
+        breathCycle();
 
         if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
 
