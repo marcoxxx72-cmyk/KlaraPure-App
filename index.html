@@ -1,1 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KlaraPure</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            overflow: hidden;
+            background-color: #87CEEB;
+        }
 
+        .container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* --- PAGES --- */
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        #page1 {
+            background-image: url('./src/assets/page1.png');
+            z-index: 3;
+        }
+
+        #page2 {
+            background-image: url('./src/assets/page2.png');
+            z-index: 1;
+            opacity: 0;
+        }
+
+        .hidden { 
+            opacity: 0 !important; 
+            pointer-events: none; 
+        }
+
+        .visible { 
+            opacity: 1 !important; 
+            pointer-events: all; 
+        }
+
+        /* --- LA LIGNE QUI RESPIRE ET ONDULE --- */
+        #wave-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            height: 200px;
+            display: none;
+            z-index: 10;
+        }
+
+        #wave-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        #wave-line {
+            fill: none;
+            stroke-linecap: round;
+            stroke-width: 3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="page1" class="page"></div>
+    <div id="page2" class="page">
+        <div id="wave-container">
+            <svg id="wave-svg" viewBox="0 0 800 200">
+                <path id="wave-line" d=""></path>
+            </svg>
+        </div>
+    </div>
+</div>
+
+<script>
+    const waveLine = document.getElementById('wave-line');
+    const width = 800;
+    const height = 200;
+    const segments = 80;
+
+    let intensity = 0.5; 
+    let targetIntensity = 0.5;
+
+    function drawWave(time) {
+        // 1. TAILLE ET MOUVEMENT : Effet "Respiration" et Ondulation
+        // On mélange plusieurs fréquences pour un rendu riche et fluide comme sur l'image
+        const amplitude = 10 + (intensity * 40); 
+        
+        // 2. COULEUR : BLEU CIEL PAR DEFAUT. ROUGE SEULEMENT SI TRES FORT (> 1.3)
+        let color;
+        if (intensity > 1.3) {
+            color = `rgb(255, 50, 70)`; // ROUGE AGRESSIF
+        } else {
+            color = `rgb(135, 206, 235)`; // BLEU CIEL DOUX
+        }
+
+        waveLine.setAttribute('stroke', color);
+        waveLine.setAttribute('filter', `drop-shadow(0 0 ${4 * intensity}px ${color})`);
+
+        // 3. DESSIN DE LA LIGNE : Très fluide, arrondie, avec plusieurs couches d'ondes
+        let pathData = `M 0 ${height/2}`;
+        for(let i = 0; i <= segments; i++) {
+            const x = (i / segments) * width;
+            // Création d'une onde complexe qui bouge lentement et doucement
+            const y = Math.sin((i * 0.35) + (time * 0.0008)) * amplitude 
+                    + Math.sin((i * 0.08) + (time * 0.0003)) * (amplitude * 0.8)
+                    + Math.sin((i * 1.2) + (time * 0.002)) * (amplitude * 0.2)
+                    + height / 2;
+            pathData += ` L ${x} ${y}`;
+        }
+        waveLine.setAttribute('d', pathData);
+
+        // Transition très douce pour que ça "respire" sans à-coups
+        intensity += (targetIntensity - intensity) * 0.05;
+    }
+
+    // Simulation de l'énergie du son : variations subtiles
+    function simulateSoundEnergy() {
+        // Pour l'intro, on reste bas (entre 0.2 et 0.8) donc pas de rouge
+        targetIntensity = 0.2 + Math.random() * 0.6; 
+        setTimeout(simulateSoundEnergy, 600 + Math.random() * 800);
+    }
+
+    let animationId;
+    function animate() {
+        drawWave(Date.now());
+        animationId = requestAnimationFrame(animate);
+    }
+
+    // --- FICHIERS AUDIO CORRIGES !!! ---
+    const audioFiles = {
+        en: "./voice_en.mp3",   // ANGLAIS
+        fr: "./voice_fr.mp3",   // FRANCAIS
+        es: "./voice_es.mp3",   // ESPAGNOL
+        it: "./voice_it.mp3"    // ITALIEN
+    };
+
+    let currentAudio = null;
+
+    function startApp(lang) {
+        console.log("Demarrage : " + lang);
+        
+        document.getElementById('page1').classList.add('hidden');
+        document.getElementById('page2').classList.add('visible');
+        document.getElementById('wave-container').style.display = 'block';
+        
+        animate();
+        simulateSoundEnergy();
+
+        if(currentAudio) {
+            currentAudio.pause();
+            currentAudio.currentTime = 0;
+        }
+
+        currentAudio = new Audio(audioFiles[lang]);
+        currentAudio.play();
+
+        currentAudio.onended = function() {
+            document.getElementById('wave-container').style.display = 'none';
+            cancelAnimationFrame(animationId);
+        };
+    }
+
+    // --- ZONES CLICABLES CORRIGEES ---
+    document.getElementById('page1').addEventListener('click', function(e) {
+        const x = e.clientX;
+        const w = window.innerWidth;
+
+        if (x < w * 0.25) { 
+            startApp('en'); // ANGLAIS
+        } else if (x < w * 0.50) { 
+            startApp('fr'); // FRANCAIS
+        } else if (x < w * 0.75) { 
+            startApp('es'); // ESPAGNOL
+        } else { 
+            startApp('it'); // ITALIEN
+        }
+    });
+
+</script>
+
+</body>
+</html>
